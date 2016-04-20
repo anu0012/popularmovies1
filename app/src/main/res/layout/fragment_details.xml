@@ -1,0 +1,100 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    tools:context="com.example.anuragsharma.popularmovies.DetailActivityFragment"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:id="@+id/movie_poster"
+            android:scaleType="centerCrop"
+
+
+
+            app:layout_collapseMode="parallax"
+            />
+
+
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#FFFFFF"
+                android:layout_alignLeft="@id/movie_poster"
+
+                android:layout_alignBottom="@id/movie_poster"
+                android:textSize="20sp"
+                android:text="heeloo"
+                android:id="@+id/movie_title_text_view"
+                android:background="@drawable/side_nav_bar"
+                android:padding="15dp"
+                />
+
+
+
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/poster_image_view"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_below="@id/movie_poster"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout"
+            android:layout_toRightOf="@id/poster_image_view"
+            android:layout_below="@id/movie_poster"
+            android:layout_marginLeft="20dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Release Date"
+
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_marginTop="16dp"
+                android:id="@+id/release_date_text_view"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Rating"
+                android:textSize="16sp"
+                android:id="@+id/rating_text_view"/>
+
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/overview_heading"
+            android:layout_marginTop="16dp"
+            android:textSize="16sp"
+            android:text="Plot Synopsis"
+            android:textStyle="bold"
+            android:layout_below="@id/poster_image_view"
+            android:layout_marginLeft="8dp"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/overview_text_view"
+            android:layout_marginTop="16dp"
+            android:textSize="18sp"
+            android:text="overview"
+            android:layout_below="@id/overview_heading"
+            android:layout_marginLeft="8dp"
+            />
+    </RelativeLayout>
+</ScrollView>
