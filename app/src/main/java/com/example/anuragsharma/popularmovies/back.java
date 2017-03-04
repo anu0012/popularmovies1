@@ -5,7 +5,7 @@ package com.example.anuragsharma.popularmovies;
 /**
  * Created by anuragsharma on 20/04/16.
  */
-public class back {
+public class Back {
 
     public static String backg(MovieDetails m){
         String path = m.getPoster_path();

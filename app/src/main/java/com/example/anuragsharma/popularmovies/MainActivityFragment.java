@@ -1,11 +1,17 @@
 package com.example.anuragsharma.popularmovies;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,7 +21,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
+
+import com.example.anuragsharma.popularmovies.data.MovieContract;
+import com.example.anuragsharma.popularmovies.data.MovieDbHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,8 +44,13 @@ import java.util.ArrayList;
  * Created by anuragsharma on 15/04/16.
  */
 public class MainActivityFragment extends Fragment {
-    GridViewAdapter gridViewAdapter;
-
+    static GridViewAdapter gridViewAdapter;
+    static int index=0;
+    private GridView gridView;
+    private ProgressDialog pDialog;
+    private static final String KEY = "movie_list";
+    private boolean isRetained = false;
+    private ArrayList<MovieDetails> movieList;
     public MainActivityFragment() {
     }
 
@@ -49,9 +64,41 @@ public class MainActivityFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
+        setRetainInstance(true);
+        if(savedInstanceState == null || !savedInstanceState.containsKey(KEY)) {
+            //Create a new ArrayList based on the array of parcelable MovieHolder object.
+            movieList = new ArrayList<>();
+        } else {
+            //Restore the movie list if it was saved.
+            movieList = savedInstanceState.getParcelableArrayList(KEY);
+            isRetained = true;
+        }
     }
 
+    @Override
+    public void onPause() {
+        index = gridView.getFirstVisiblePosition();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        gridView.setSelection(index);
+    }
+
+    public static boolean isTablet(Context context) {
+        return (context.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK)
+                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle state) {
+        state.putParcelableArrayList(KEY, movieList);
+        super.onSaveInstanceState(state);
+    }
 
 
     @Override
@@ -60,20 +107,37 @@ public class MainActivityFragment extends Fragment {
         View rootview = inflater.inflate(R.layout.fragment_main, container, false);
         final ArrayList<MovieDetails> mArr = new ArrayList<>();
         gridViewAdapter = new GridViewAdapter(getActivity(), R.layout.grid_item, mArr);
-        GridView gridView = (GridView) rootview.findViewById(R.id.movies_grid);
+        gridView = (GridView) rootview.findViewById(R.id.movies_grid);
+
         int orientation=this.getResources().getConfiguration().orientation;
         if(orientation== Configuration.ORIENTATION_LANDSCAPE){
             gridView.setNumColumns(4);
+            for (MovieDetails md:movieList){
+                gridViewAdapter.add(md);
+            }
         }
-        updateMovies(MainActivity.s);
+        //updateMovies(MainActivity.s);
         gridView.setAdapter(gridViewAdapter);
 
+        //Toast.makeText(getActivity(), index+"", Toast.LENGTH_SHORT).show();
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), DetailActivity.class).putExtra("movies_details", mArr.get(position));
-                ;
-                startActivity(intent);
+
+                if(!isTablet(getActivity()))
+                {
+                    Intent intent = new Intent(getActivity(), DetailActivity.class).putExtra("movies_details", mArr.get(position));
+                    startActivity(intent);
+                }
+                else{
+                    Bundle bundle = new Bundle();
+
+                    bundle.putParcelable("movies_details",mArr.get(position));
+                    FragmentManager fragmentManager = getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    DetailActivityFragment fragment = DetailActivityFragment.newInstance(bundle);
+                    fragmentTransaction.add(R.id.detail_activity_fragment, fragment).commit();
+                }
 
             }
         });
@@ -115,6 +179,37 @@ public class MainActivityFragment extends Fragment {
             return true;
         }
 
+        if (id == R.id.action_fav) {
+            MainActivity.s="favorite";
+            //MovieDbHelper movieDbHelper = new MovieDbHelper(getActivity());
+            gridViewAdapter.clear();
+            //ArrayList<MovieDetails> movieDetails = movieDbHelper.queryAllMoviesEntries();
+            Cursor c = getActivity().getContentResolver().query(MovieContract.FavoriteEntry.CONTENT_URI,new String[]{
+                    MovieContract.FavoriteEntry.COLUMN_TITLE,
+                    MovieContract.FavoriteEntry.COLUMN_POSTER,
+                    MovieContract.FavoriteEntry.COLUMN_OVERVIEW,
+                    MovieContract.FavoriteEntry.COLUMN_RATING,
+                    MovieContract.FavoriteEntry.COLUMN_RELEASE_DATE,
+                    MovieContract.FavoriteEntry.COLUMN_MOVIE_ID
+            },null,null,null);
+
+            if(c.getCount() > 0)
+            {
+                ArrayList<MovieDetails> movieDetails = new ArrayList<>();
+                c.moveToFirst();
+                while (!c.isAfterLast()) {
+                    MovieDetails m = new MovieDetails(c.getString(0),c.getString(1),c.getString(2),c.getString(3),
+                            c.getString(4),c.getLong(5));
+                    movieDetails.add(m);
+                    c.moveToNext();
+                }
+                new FetchMovie().onPostExecute(movieDetails);
+            }
+
+
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -132,6 +227,16 @@ public class MainActivityFragment extends Fragment {
         final String LOG=FetchMovie.class.getSimpleName();
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            super.onPreExecute();
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Loading");
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        @Override
         protected ArrayList<MovieDetails> doInBackground(String... params) {
 
             HttpURLConnection urlConnection=null;
@@ -146,7 +251,7 @@ public class MainActivityFragment extends Fragment {
 
                 Uri buildUri= Uri.parse(MOVIE_BASE_URL).buildUpon()
                         .appendPath(SORT_ORDER)
-                        .appendQueryParameter(APPID_PARAM, "API_KEY")     //put api here
+                        .appendQueryParameter(APPID_PARAM, "bf7cbd994b59a5faeb281c7d0f07029d")     //put api here
                         .build();
 
 
@@ -212,6 +317,7 @@ public class MainActivityFragment extends Fragment {
             final String OVERVIEW = "overview";
             final String VOTE_AVERAGE = "vote_average";
             final String RELEASE_DATE = "release_date";
+            final String ID = "id";
 
 
             JSONObject movie = new JSONObject(movieJson);
@@ -227,7 +333,8 @@ public class MainActivityFragment extends Fragment {
                         single_movie.getString(POSTER_PATH),
                         single_movie.getString(OVERVIEW),
                         single_movie.getString(VOTE_AVERAGE),
-                        single_movie.getString(RELEASE_DATE)
+                        single_movie.getString(RELEASE_DATE),
+                        single_movie.getLong(ID)
                 );
                 Log.v(LOG,mdetails.getPoster_path());
                 moviearray.add(mdetails);
@@ -241,13 +348,14 @@ public class MainActivityFragment extends Fragment {
             if(movieDetaisls!=null){
 
                 gridViewAdapter.clear();
+
                 for (MovieDetails md:movieDetaisls){
                     gridViewAdapter.add(md);
                 }
-
-
             }
+
             super.onPostExecute(movieDetaisls);
+            pDialog.dismiss();
         }
     }
 

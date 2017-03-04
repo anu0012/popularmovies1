@@ -3,5 +3,15 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-
+    <color name="indigo">#7f4b0082</color>
+    <color name="pink">#FFC0CB</color>
+    <color name="black">#000000</color>
+    <color name="tan">#FFF7DA</color>
+    <color name="green">#C4DC2C</color>
+    <color name="cyan">#2EBCEA</color>
+    <color name="salmon">#FA8072</color>
+    <color name="hotpink">#FF69B4</color>
+    <color name="orange">#FFA500</color>
+    <color name="gold">#FFD700</color>
+    <color name="white">#ffffff</color>
 </resources>

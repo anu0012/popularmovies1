@@ -1,8 +1,11 @@
 <resources>
     <string name="app_name">PopularMovies</string>
     <string name="action_popular">Popular</string>
-    <string name="search"></string>
+    <string name="settings">Share</string>
     <string name="sort_key">sort</string>
     <string name="sort_default">popular</string>
     <string name="action_rated">Top Rated</string>
+    <string name="trailerUrl">Trailer</string>
+    <string name="isFavorite">isFavorite</string>
+    <string name="fav">Favorite</string>
 </resources>

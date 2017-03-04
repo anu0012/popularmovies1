@@ -48,8 +48,6 @@ public class GridViewAdapter extends ArrayAdapter {
         inflater.inflate(layoutid, parent, false);
         if (convertView == null) {
             imageView=new ImageView(context);
-
-
         }
         else
         imageView=(ImageView)convertView;

@@ -1,44 +1,29 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-
-    tools:context="com.example.anuragsharma.popularmovies.DetailActivityFragment"
-    >
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:background="@color/white"
+            tools:context="com.example.anuragsharma.popularmovies.DetailActivityFragment"
+            >
+            <RelativeLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:id="@+id/movie_poster"
             android:scaleType="centerCrop"
-
-
-
             app:layout_collapseMode="parallax"
             />
-
-
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="#FFFFFF"
-                android:layout_alignLeft="@id/movie_poster"
-
-                android:layout_alignBottom="@id/movie_poster"
-                android:textSize="20sp"
-                android:text="heeloo"
-                android:id="@+id/movie_title_text_view"
-                android:background="@drawable/side_nav_bar"
-                android:padding="15dp"
-                />
-
-
-
 
 
         <ImageView
@@ -62,7 +47,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Release Date"
-
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:layout_marginTop="16dp"
                 android:id="@+id/release_date_text_view"/>
@@ -71,6 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Rating"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:id="@+id/rating_text_view"/>
 
@@ -80,6 +65,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/overview_heading"
             android:layout_marginTop="16dp"
+            android:paddingLeft="10dp"
+            android:textColor="@color/black"
             android:textSize="16sp"
             android:text="Plot Synopsis"
             android:textStyle="bold"
@@ -91,10 +78,86 @@
             android:layout_height="wrap_content"
             android:id="@+id/overview_text_view"
             android:layout_marginTop="16dp"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:text="overview"
+            android:padding="10dp"
             android:layout_below="@id/overview_heading"
             android:layout_marginLeft="8dp"
             />
-    </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/overview_text_view"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:id="@+id/trailer"
+            >
+            <!--<Button-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/trailer_button"-->
+                <!--style="@style/Widget.AppCompat.Button.Colored"-->
+                <!--android:foreground="@android:drawable/ic_media_play"-->
+                <!--android:foregroundGravity="center" />-->
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:padding="10dp"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:textColor="@color/black"-->
+                <!--android:textSize="18sp"-->
+                <!--android:text="Trailer"/>-->
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/trailer"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:id="@+id/review"
+            >
+        </LinearLayout>
+
+        <android.support.design.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/poster_image_view"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/white"
+                android:layout_alignLeft="@id/movie_poster"
+                android:layout_alignBottom="@id/movie_poster"
+                android:textSize="20sp"
+                android:text="Hello"
+                android:id="@+id/movie_title_text_view"
+                android:background="@drawable/side_nav_bar"
+                android:padding="15dp"
+                />
+
+        </android.support.design.widget.CoordinatorLayout>
+
+
+            </RelativeLayout>
 </ScrollView>
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            app:fabSize="normal"
+            android:layout_gravity="bottom|end"
+            app:srcCompat="@android:drawable/btn_star_big_off"
+            android:layout_marginRight="17dp"
+            android:layout_marginEnd="17dp"
+            android:layout_marginBottom="23dp"
+            android:elevation="6dp"
+            app:pressedTranslationZ="12dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/favourite_button"/>
+    </RelativeLayout>

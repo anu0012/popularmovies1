@@ -17,8 +17,6 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.movie_details);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
     }
 
 }
